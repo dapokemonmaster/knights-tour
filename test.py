@@ -90,12 +90,12 @@ def step(board, numBoard, win, moves, x, y, rgb):
     makeMove(board, win, newX, newY)
     countMoves(board, numBoard, moves, x, y)
 
-    print("board of moves:")
-    for a in numBoard:
-        print(a)
-    print("next move", nextMove, "to [", newX, ",", newY, "]")
+    #print("board of moves:")
+    #for a in numBoard:
+    #    print(a)
+    #print("next move", nextMove, "to [", newX, ",", newY, "]")
 
-    input("press any key...")
+    #input("press any key...")
     return newX, newY
 
 
@@ -106,7 +106,7 @@ def main():
 
     win = GraphWin('Knight\'s Tour', 530, 580)
     win.setBackground('white')
-    message = Text(Point(win.getWidth()/2, 30), 'Knight\'s Tour Version 1') 
+    message = Text(Point(win.getWidth()/2, 30), 'Knight\'s Tour Version 2') 
     message.setTextColor('red')
     message.setStyle('italic')
     message.setSize(20)
