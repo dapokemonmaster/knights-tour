@@ -106,7 +106,7 @@ def main():
 
     win = GraphWin('Knight\'s Tour', 530, 580)
     win.setBackground('white')
-    message = Text(Point(win.getWidth()/2, 30), 'Knight\'s Tour Version 1') 
+    message = Text(Point(win.getWidth()/2, 30), 'Knight\'s Tour Version 2') 
     message.setTextColor('red')
     message.setStyle('italic')
     message.setSize(20)
