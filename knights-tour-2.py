@@ -1,6 +1,6 @@
 #  File: knights-tour-2.py
 
-#  Description: Knight's Tour with colored line gradient
+#  Description: Knight's Tour with lines
 
 #  Student Name: Russell Kan
 
