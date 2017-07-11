@@ -1,6 +1,6 @@
 #  File: knights-tour-1.py
 
-#  Description: Knight's Tour
+#  Description: Knight's Tour Initial
 
 #  Student Name: Russell Kan
 
