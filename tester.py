@@ -16,13 +16,13 @@
 
 from graphics import *
 
-def drawBoard(win, dim):
+def drawBoard(win):
     board = Rectangle(Point(25,75), Point(505,555))
     board.setFill("white")
     board.draw(win)
     # Draw horizontal lines
-    for row in range(0,dim):
-        for col in range(0,dim):
+    for row in range(0,8):
+        for col in range(0,8):
             top = Point(row*60+25, col*60+75)
             bottom = Point((row+1)*60+25, (col+1)*60+75)
             tile = Rectangle(top,bottom)
@@ -33,12 +33,12 @@ def drawBoard(win, dim):
             tile.setFill(color)
             tile.draw(win)
 
-def countMoves(board, numBoard, dim, moves, x, y):
+def countMoves(board, numBoard, moves, x, y):
     for d in range(len(board[0])):
         for c in range(len(board[0])):
             count = 0
             for move in moves:
-                if isValid(board, move, dim, c, d):
+                if isValid(board, move, c, d):
                     count += 1
             numBoard[d][c] = count
 
@@ -62,21 +62,21 @@ def makeMove(board, win, x, y):
     x1.draw(win)
     x2.draw(win)
 
-def isValid(board, move, dim, x, y): # check if a move is valid
-    if x+move[0] >= 0 and y+move[1] >= 0 and x+move[0] < dim and y+move[1] < dim:   # check boundaries
+def isValid(board, move, x, y): # check if a move is valid
+    if x+move[0] >= 0 and y+move[1] >= 0 and x+move[0] < 8 and y+move[1] < 8:   # check boundaries
         if board[y+move[1]][x+move[0]] != 1:    # check if a space has been visited already
             return True
     else:
         return False
 
-def step(board, numBoard, win, dim, moves, x, y, rgb):
+def step(board, numBoard, win, moves, x, y, rgb):
     lowest = 8
     for move in moves:
-        if isValid(board, move, dim, x, y):
+        if isValid(board, move, x, y):
             if numBoard[y+move[1]][x+move[0]] < lowest:
                 lowsum = 0
                 for m in moves:
-                    if isValid(board, [move[0]+m[0], move[1]+m[1]], dim, x, y):
+                    if isValid(board, [move[0]+m[0], move[1]+m[1]], x, y):
                         lowsum += numBoard[y+move[1]+m[1]][x+move[0]+m[0]]
                 newX = x + move[0]
                 newY = y + move[1]
@@ -86,7 +86,7 @@ def step(board, numBoard, win, dim, moves, x, y, rgb):
             if numBoard[y+move[1]][x+move[0]] == lowest:
                 tempsum = 0
                 for n in moves:
-                    if isValid(board, [move[0]+n[0], move[1]+n[1]], dim, x, y):
+                    if isValid(board, [move[0]+n[0], move[1]+n[1]], x, y):
                         tempsum += numBoard[y+move[1]+n[1]][x+move[0]+m[0]]
                 if tempsum <= lowsum:
                     newX = x + move[0]
@@ -108,7 +108,7 @@ def step(board, numBoard, win, dim, moves, x, y, rgb):
     line.draw(win)
 
     makeMove(board, win, newX, newY)
-    countMoves(board, numBoard, dim, moves, x, y)
+    countMoves(board, numBoard, moves, x, y)
 
     #print("board of moves:")
     #for a in numBoard:
@@ -119,23 +119,14 @@ def step(board, numBoard, win, dim, moves, x, y, rgb):
     return newX, newY
 
 def main():
-    while True:
-        try:
-            dim = int(input("Please enter board size: "))
-            if dim > 0:
-                break
-            print("Invalid number. Please try again.")
-        except ValueError:
-            print("Invalid input. Try again.")
-
-    for a in range(0,dim):
-        for b in range(0,dim):
+    for a in range(0,8):
+        for b in range(0,8):
             startPos = str(a) + ", " +str(b)
-            board = [[0 for y in range(dim)] for x in range(dim)]
-            numBoard = [[0 for y in range(dim)] for x in range(dim)]
+            board = [[0 for y in range(8)] for x in range(8)]
+            numBoard = [[0 for y in range(8)] for x in range(8)]
             moves = [[-2,1], [-1,2], [1,2], [2,1], [2,-1], [1,-2], [-1,-2], [-2,-1]]    # possible moves of a knight
 
-            win = GraphWin(startPos, dim*60+50, dim*60+100)
+            win = GraphWin(startPos, 530, 580)
             win.setBackground('white')
             message = Text(Point(win.getWidth()/2, 30), 'Knight\'s Tour Test Version') 
             message.setTextColor('red')
@@ -143,7 +134,7 @@ def main():
             message.setSize(20)
             message.draw(win)
 
-            drawBoard(win, dim)
+            drawBoard(win)
             
             #p1 = Point(0,0)
             #while p1.getX() < 25 or p1.getX() > 505 or p1.getY() < 75 or p1.getY() > 555:
@@ -152,21 +143,21 @@ def main():
             x = a
             y = b
             makeMove(board, win, x, y)
-            countMoves(board, numBoard, dim, moves, x, y)
+            countMoves(board, numBoard, moves, x, y)
             rgb = [0, 0, 0]
 
             while True:
-                x, y = step(board, numBoard, win, dim, moves, x, y, rgb)
+                x, y = step(board, numBoard, win, moves, x, y, rgb)
                 if x == -1:
                     print("Failed at ", a, b)
                     win.getMouse()
                     win.close()
 
                 if rgb[2] < 248:
-                    rgb[2] += int(255 / (dim ** 2 - 1))
+                    rgb[2] += 8
                 else:
-                    rgb[0] += int(255 / (dim ** 2 - 1))
-                    rgb[1] += int(255 / (dim ** 2 - 1))
+                    rgb[0] += 8
+                    rgb[1] += 8
                     
 
                 if all(v == 1 for r in board for v in r):

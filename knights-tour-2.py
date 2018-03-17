@@ -98,7 +98,6 @@ def step(board, numBoard, win, moves, x, y, rgb):
     input("press any key...")
     return newX, newY
 
-
 def main():
     board = [[0 for y in range(8)] for x in range(8)]
     numBoard = [[0 for y in range(8)] for x in range(8)]

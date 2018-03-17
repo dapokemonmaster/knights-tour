@@ -1,6 +1,6 @@
-#  File: knights-tour-1.py
+#  File: knights-tour-3.py
 
-#  Description: Knight's Tour Initial
+#  Description: implemented fix to problem caused by starting at 5,3
 
 #  Student Name: Russell Kan
 
@@ -61,8 +61,6 @@ def makeMove(board, win, x, y):
     x2.setWidth(4)
     x1.draw(win)
     x2.draw(win)
-    for a in board:
-        print(a)
 
 def isValid(board, move, x, y): # check if a move is valid
     if x+move[0] >= 0 and y+move[1] >= 0 and x+move[0] < 8 and y+move[1] < 8:   # check boundaries
@@ -71,29 +69,48 @@ def isValid(board, move, x, y): # check if a move is valid
     else:
         return False
 
-def step(board, numBoard, win, moves, x, y):
+
+def step(board, numBoard, win, moves, x, y, rgb):
     lowest = 8
     for move in moves:
         if isValid(board, move, x, y):
-            if numBoard[y+move[1]][x+move[0]] <= lowest:
+            if numBoard[y+move[1]][x+move[0]] < lowest:
+                lowsum = 0
+                for m in moves:
+                    if isValid(board, [move[0]+m[0], move[1]+m[1]], x, y):
+                        lowsum += numBoard[y+move[1]+m[1]][x+move[0]+m[0]]
                 newX = x + move[0]
                 newY = y + move[1]
                 lowest = numBoard[newY][newX]
                 nextMove = move
 
+            if numBoard[y+move[1]][x+move[0]] == lowest:
+                tempsum = 0
+                for n in moves:
+                    if isValid(board, [move[0]+n[0], move[1]+n[1]], x, y):
+                        tempsum += numBoard[y+move[1]+n[1]][x+move[0]+m[0]]
+                if tempsum <= lowsum:
+                    newX = x + move[0]
+                    newY = y + move[1]
+                    lowest = numBoard[newY][newX]
+                    nextMove = move
+                    lowsum = 0
+
     oldCenter = findPixel(x, y)
     newCenter = findPixel(newX, newY)
     line = Line(Point(oldCenter.getX(), oldCenter.getY()), Point(newCenter.getX(), newCenter.getY()))
-    line.setWidth(1)
+    line.setWidth(2.5)
+    color = color_rgb(rgb[0], rgb[1], rgb[2])
+    line.setFill(color)
     line.draw(win)
 
     makeMove(board, win, newX, newY)
     countMoves(board, numBoard, moves, x, y)
 
-    print("board of moves")
+    print("board of moves:")
     for a in numBoard:
         print(a)
-    print("next move", move)
+    print("next move", nextMove, "to [", newX, ",", newY, "]")
 
     input("press any key...")
     return newX, newY
@@ -105,7 +122,7 @@ def main():
 
     win = GraphWin('Knight\'s Tour', 530, 580)
     win.setBackground('white')
-    message = Text(Point(win.getWidth()/2, 30), 'Knight\'s Tour Version 1') 
+    message = Text(Point(win.getWidth()/2, 30), 'Knight\'s Tour Version 2') 
     message.setTextColor('red')
     message.setStyle('italic')
     message.setSize(20)
@@ -120,9 +137,18 @@ def main():
     x, y = findTile(p1)
     makeMove(board, win, x, y)
     countMoves(board, numBoard, moves, x, y)
+    rgb = [0, 0, 0]
 
     while True:
-        x, y = step(board, numBoard, win, moves, x, y)
+        x, y = step(board, numBoard, win, moves, x, y, rgb)
+
+        if rgb[2] < 248:
+            rgb[2] += 8
+        else:
+            rgb[0] += 8
+            rgb[1] += 8
+            
+
         if all(v == 1 for r in board for v in r):
             break
 
